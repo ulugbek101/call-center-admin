@@ -1,6 +1,8 @@
 from os import makedirs
 from pathlib import Path
 
+from django.urls import reverse_lazy
+
 from environs import Env
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -18,6 +20,8 @@ DEBUG = env.bool('DEBUG', default=False)
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
 
 INSTALLED_APPS = [
+    'unfold',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -25,7 +29,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'unfold',
     'phonenumber_field',
     'app_main',
     'rest_framework',
@@ -110,3 +113,40 @@ STATICFILES_DIRS = [
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'app_main.User'
+
+UNFOLD = {
+    "SITE_TITLE": "Колл-центр | Админка",
+    "SITE_HEADER": "KPI мониторинг",
+    "SITE_SUBHEADER": "",
+    "SITE_URL": None,
+    "SHOW_HISTORY": True,
+    "SHOW_BACK_BUTTON": True,
+    "BORDER_RADIUS": "6px",
+    "SIDEBAR": {
+        "show_search": False,
+        "command_search": False,
+        "show_all_applications": False,
+        "navigation": [
+            {
+                "title": "Мониторинг",
+                "separator": False,
+                "collapsible": False,
+                "items": [
+                    {
+                        "title": "Пользователи",
+                        "icon": "people",
+                        "badge_style": "solid",
+                        "link": reverse_lazy("admin:app_main_user_changelist"),
+                    },
+                    {
+                        "title": "Этапы",
+                        "icon": "timeline",
+                        "link": reverse_lazy("admin:app_main_user_changelist"),
+                    },
+                ],
+            },
+        ],
+    },
+}

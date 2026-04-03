@@ -1,5 +1,6 @@
 from django.contrib.auth.models import BaseUserManager
 
+from app_main.enums import UserRoles
 
 class UserManager(BaseUserManager):
     def create_user(self, phone_number, first_name, last_name, middle_name=None, password=None, **extra_fields):
@@ -24,6 +25,7 @@ class UserManager(BaseUserManager):
     def create_superuser(self, phone_number, first_name, last_name, middle_name=None, password=None, **extra_fields):
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('role', UserRoles.SUPERUSER)
 
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Суперпользователь должен иметь is_superuser=True.')

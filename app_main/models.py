@@ -11,7 +11,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(verbose_name="Имя", max_length=255)
     last_name = models.CharField(verbose_name="Фамилия", max_length=255)
     middle_name = models.CharField(verbose_name="Отчество", max_length=255, blank=True, null=True)
-    phone_number = PhoneNumberField(verbose_name="Номер телефона")
+    phone_number = PhoneNumberField(verbose_name="Номер телефона", unique=True)
     role = models.CharField(verbose_name="Роль", max_length=50, choices=UserRoles.choices, default=UserRoles.STAFF)
     current_score = models.IntegerField(verbose_name="Текущий балл", default=0)
     current_milestone = models.ForeignKey('Milestone', verbose_name="Текущий этап", on_delete=models.PROTECT, blank=True, null=True)
@@ -28,6 +28,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = "phone_number"
     REQUIRED_FIELDS = ["first_name", "last_name", "middle_name"]
+
+    def get_username(self):
+        return self.__str__()
+
+    def get_fullname(self):
+        return self.__str__()
 
     def __str__(self):
         return f"{self.last_name} {self.first_name} {self.middle_name or ''}".strip()
@@ -53,6 +59,6 @@ class Milestone(models.Model):
 
     class Meta:
         db_table = "milestones"
-        ordering = ["-created"]
+        ordering = ["required_score"]
         verbose_name = "Этап"
         verbose_name_plural = "Этапы"
