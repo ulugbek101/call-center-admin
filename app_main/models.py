@@ -11,7 +11,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(verbose_name="Имя", max_length=255)
     last_name = models.CharField(verbose_name="Фамилия", max_length=255)
     middle_name = models.CharField(verbose_name="Отчество", max_length=255, blank=True, null=True)
-    phone_number = models.PhoneNumberField(verbose_name="Номер телефона")
+    phone_number = PhoneNumberField(verbose_name="Номер телефона")
     role = models.CharField(verbose_name="Роль", max_length=50, choices=UserRoles.choices)
     
     is_on_vacation = models.BooleanField(verbose_name="На отпуске", help_text="Включите, если сотрудник на отпуске или по какой то причине долго не может работать", default=False)
