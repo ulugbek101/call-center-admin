@@ -10,6 +10,7 @@ admin.site.unregister(Group)
 
 @admin.register(User)
 class UserAdmin(ModelAdmin):
+    search_help_text = "Поиск по ФИО, Номер телефона"
     list_display = (
         'id',
         'first_name',
@@ -43,23 +44,54 @@ class UserAdmin(ModelAdmin):
     def role_display(self, obj):
         return obj.get_role_display()
 
+    fieldsets = (
+        ("Основные поля", {
+            "fields": (
+                "first_name", "last_name", "middle_name", "phone_number"
+            )
+        }),
+        # Поле "password" - отключено
+        # ("Безопасность", {
+        #     "fields": (
+        #         "password",
+        #     ),
+        #     "description": "Пароль зашифрован в целях безопасности, что бы изменить пароль - просто удалите старое значение и наберите новое",
+        # }),
+        ("Другое", {
+            "fields": (
+                "role", "current_score", "current_milestone", "is_on_vacation", "is_staff", "is_superuser", "is_active"
+            )
+        }),
+    )
+
 
 @admin.register(Milestone)
 class MilestoneAdmin(ModelAdmin):
+    search_help_text = "Поиск по названию этапа"
+    fieldsets = (
+        (None, {
+            "fields": (
+                "name", "required_score", "is_active",
+            )
+        }),
+    )
+
     list_display = (
-        'id',
-        'name',
-        'required_score',
-        'created',
-        'updated',
+        "id",
+        "name",
+        "required_score",
+        "is_active",
+        "created",
+        "updated",
     )
     list_display_links = (
-        'id',
-        'name',
-        'created',
-        'updated',
+        "id",
+        "name",
+        "is_active",
+        "created",
+        "updated",
     )
-    list_filter = ('created', 'updated')
+    list_filter = ('created',)
     search_fields = ('name',)
     list_editable = ('required_score',)
     list_per_page = 20

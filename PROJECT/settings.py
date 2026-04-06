@@ -143,7 +143,7 @@ UNFOLD = {
                     {
                         "title": "Этапы",
                         "icon": "timeline",
-                        "link": reverse_lazy("admin:app_main_user_changelist"),
+                        "link": reverse_lazy("admin:app_main_milestone_changelist"),
                     },
                 ],
             },
