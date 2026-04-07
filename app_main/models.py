@@ -1,3 +1,5 @@
+from random import randint
+
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.hashers import make_password
@@ -17,10 +19,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     current_score = models.IntegerField(verbose_name="Текущий балл", default=0)
     current_milestone = models.ForeignKey('Milestone', verbose_name="Текущий этап", on_delete=models.PROTECT, blank=True, null=True)
 
+    activation_code = models.CharField(verbose_name="Код активации", max_length=10, help_text="НЕ ЗАПОЛНЯЙТЕ ЭТО ПОЛЕ. Код активации сгенерирутся АВТОМАТИЧЕСКИ", blank=True, null=True)
+    is_activation_code_used = models.BooleanField(verbose_name="Использован ли код активации", default=False, help_text="Индикатор того, использовал ли сотрудник этот код при запуке бота")
     is_on_vacation = models.BooleanField(verbose_name="На отпуске", help_text="Включите, если сотрудник на отпуске или по какой то причине долго не может работать", default=False)
     is_active = models.BooleanField(verbose_name="Активный", help_text="Статус активности пользователя, вместо того что бы удалить пользователя, просто отключите эту опцию", default=True)
     is_superuser = models.BooleanField(verbose_name="Суперпользователь", help_text="Может ли сотрудник создавать и удалять других сотрудников", default=False)
-    is_staff = models.BooleanField(verbose_name="Сотрудник", help_text="Может ли сотрудник заходить в админ панель", default=False)
+    is_staff = models.BooleanField(verbose_name="Доверенный сотрудник", help_text="Может ли сотрудник заходить в админ панель", default=False)
 
     created = models.DateTimeField(verbose_name="Дата добавления", auto_now_add=True)
     updated = models.DateTimeField(verbose_name="Дата изменения", auto_now=True)
@@ -49,6 +53,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     def save(self, *args, **kwargs):
         if self.password and not self.password.startswith('pbkdf2_'):
             self.password = make_password(self.password)
+
+        if not self.activation_code:
+            super().save(*args, **kwargs)
+            self.activation_code = f"{self.id}{self.last_name[0].capitalize()}{randint(10, 50)}{self.first_name[0]}"
 
         super().save(*args, **kwargs)
 

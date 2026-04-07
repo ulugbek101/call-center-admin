@@ -59,7 +59,7 @@ class UserAdmin(ModelAdmin):
         # }),
         ("Другое", {
             "fields": (
-                "role", "current_score", "current_milestone", "is_on_vacation", "is_staff", "is_superuser", "is_active"
+                "role", "current_score", "current_milestone", "activation_code", "is_activation_code_used", "is_on_vacation", "is_staff", "is_superuser", "is_active"
             )
         }),
     )
