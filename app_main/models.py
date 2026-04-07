@@ -80,7 +80,7 @@ class Milestone(models.Model):
 
 
 class FinishedMilestones(models.Model):
-    milestone = models.ForeignKey(verbose_name="Этап", to=Milestone, on_delete=models.PROTECT)
+    milestone = models.ForeignKey(verbose_name="Этап", to=Milestone, on_delete=models.CASCADE)
     user = models.ForeignKey(verbose_name="Сотрудник", to=User, on_delete=models.CASCADE)
     created = models.DateTimeField(verbose_name="Дата добавления", auto_now_add=True)
     updated = models.DateTimeField(verbose_name="Дата изменения", auto_now=True)
