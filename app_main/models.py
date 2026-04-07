@@ -11,10 +11,11 @@ from app_main.managers import UserManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    first_name = models.CharField(verbose_name="Имя", max_length=255)
-    last_name = models.CharField(verbose_name="Фамилия", max_length=255)
+    first_name = models.CharField(verbose_name="Имя", max_length=255, blank=True, null=True)
+    last_name = models.CharField(verbose_name="Фамилия", max_length=255, blank=True, null=True)
     middle_name = models.CharField(verbose_name="Отчество", max_length=255, blank=True, null=True)
     phone_number = PhoneNumberField(verbose_name="Номер телефона", unique=True)
+    telegram_id = models.CharField(verbose_name="Телеграмм ID", max_length=200, null=True, blank=True)
     role = models.CharField(verbose_name="Роль", max_length=50, choices=UserRoles.choices, default=UserRoles.STAFF)
     current_score = models.IntegerField(verbose_name="Текущий балл", default=0)
     current_milestone = models.ForeignKey('Milestone', verbose_name="Текущий этап", on_delete=models.PROTECT, blank=True, null=True)
@@ -32,7 +33,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = "phone_number"
-    REQUIRED_FIELDS = ["first_name", "last_name", "middle_name"]
 
     def get_username(self):
         return self.phone_number.__str__()

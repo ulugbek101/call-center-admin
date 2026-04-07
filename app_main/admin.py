@@ -16,6 +16,7 @@ class UserAdmin(ModelAdmin):
         'first_name',
         'last_name',
         'middle_name',
+        'telegram_id',
         'role_display',
         'is_on_vacation',
         'is_staff',
@@ -27,12 +28,13 @@ class UserAdmin(ModelAdmin):
         'first_name',
         'last_name',
         'middle_name',
+        'telegram_id',
         'role_display',
         'created',
         'updated',
     )
     list_filter = ('role', 'is_on_vacation', 'is_active', 'is_superuser', 'is_staff')
-    search_fields = ('first_name', 'last_name', 'middle_name', 'phone_number')
+    search_fields = ('first_name', 'last_name', 'middle_name', 'phone_number', 'telegram_id')
     list_editable = ('is_on_vacation', 'is_staff')
     list_per_page = 20
 
@@ -45,7 +47,7 @@ class UserAdmin(ModelAdmin):
         return obj.get_role_display()
 
     fieldsets = (
-        ("Основные поля", {
+        ("Основные поля (Обязательно)", {
             "fields": (
                 "first_name", "last_name", "middle_name", "phone_number"
             )
@@ -57,7 +59,7 @@ class UserAdmin(ModelAdmin):
         #     ),
         #     "description": "Пароль зашифрован в целях безопасности, что бы изменить пароль - просто удалите старое значение и наберите новое",
         # }),
-        ("Другое", {
+        ("Другое (Не обязательно)", {
             "fields": (
                 "role", "current_score", "current_milestone", "activation_code", "is_activation_code_used", "is_on_vacation", "is_staff", "is_superuser", "is_active"
             )
