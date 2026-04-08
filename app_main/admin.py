@@ -15,11 +15,8 @@ class UserAdmin(ModelAdmin):
         'id',
         'first_name',
         'last_name',
-        'middle_name',
-        'telegram_id',
-        'role_display',
-        'is_on_vacation',
-        'is_staff',
+        'is_activation_code_used',
+        'activation_code',
         'created',
         'updated',
     )
@@ -27,15 +24,13 @@ class UserAdmin(ModelAdmin):
         'id',
         'first_name',
         'last_name',
-        'middle_name',
         'telegram_id',
-        'role_display',
+        'is_activation_code_used',
         'created',
         'updated',
     )
     list_filter = ('role', 'is_on_vacation', 'is_active', 'is_superuser', 'is_staff')
     search_fields = ('first_name', 'last_name', 'middle_name', 'phone_number', 'telegram_id')
-    list_editable = ('is_on_vacation', 'is_staff')
     list_per_page = 20
 
     @admin.display(description='Телефон', ordering='phone_number')
@@ -61,7 +56,7 @@ class UserAdmin(ModelAdmin):
         # }),
         ("Другое (Не обязательно)", {
             "fields": (
-                "role", "current_score", "current_milestone", "activation_code", "is_activation_code_used", "is_on_vacation", "is_staff", "is_superuser", "is_active"
+                "telegram_id", "role", "current_score", "current_milestone", "activation_code", "is_activation_code_used", "is_on_vacation", "is_staff", "is_superuser", "is_active"
             )
         }),
     )
