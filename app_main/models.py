@@ -17,8 +17,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     phone_number = PhoneNumberField(verbose_name="Номер телефона", unique=True)
     telegram_id = models.CharField(verbose_name="Телеграмм ID", max_length=200, null=True, blank=True)
     role = models.CharField(verbose_name="Роль", max_length=50, choices=UserRoles.choices, default=UserRoles.STAFF)
-    current_score = models.IntegerField(verbose_name="Текущий балл", default=0)
-    current_milestone = models.ForeignKey('Milestone', verbose_name="Текущий этап", on_delete=models.PROTECT, blank=True, null=True)
 
     activation_code = models.CharField(verbose_name="Код активации", max_length=10, help_text="НЕ ЗАПОЛНЯЙТЕ ЭТО ПОЛЕ. Код активации сгенерирутся АВТОМАТИЧЕСКИ", blank=True, null=True)
     is_activation_code_used = models.BooleanField(verbose_name="Использован ли код активации", default=False, help_text="Индикатор того, использовал ли сотрудник этот код при запуке бота")
@@ -33,6 +31,22 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = "phone_number"
+
+    @property
+    def current_score(self):
+        return sum(self.point_set.values_list('amount'))
+
+    @property
+    def current_milestone(self):
+        user_milestone = ""
+
+        milestones = Milestone.objects.all()
+
+        for milestone in milestones:
+            if self.current_score >= milestone.required_score:
+                user_milestone = milestone.name
+
+        return user_milestone
 
     def get_username(self):
         return self.phone_number.__str__()
@@ -92,3 +106,37 @@ class FinishedMilestones(models.Model):
         ordering = ["-created"]
         verbose_name = "Завершенный этап"
         verbose_name_plural = "Завершенные этапы"
+        db_table = "finished_milestones"
+
+
+
+class MotivationalPhrase(models.Model):
+    phrase = models.TextField(verbose_name="мотивирующая фраза", help_text="Длина не ограничена")
+    send_time = models.TimeField(verbose_name="Время отправки", help_text="Если не ставить - то автоматически подставиться 12:00 дня", default="12:00:00")
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.phrase[:50]} ..."
+
+    class Meta:
+        db_table = "motivational_phrases"
+        verbose_name = "Мотивирующая фраза"
+        verbose_name_plural = "Мотивирующие фразы"
+        ordering = ["-created"]
+
+
+
+class Point(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE, verbose_name="Сотрудник", help_text="Укажите сотрудника, кому выдается балл")
+    amount = models.IntegerField(verbose_name="Кол-во баллов")
+    description = models.CharField(verbose_name="За что сотрудник получает этот балл", max_length=255)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.get_fullname()} получил {self.amount} балл за \"{self.description[:20]}\""
+
+    class Meta:
+        db_table = "points"
+        verbose_name = "Балл"
+        verbose_name_plural = "Быллы"
+        ordering = ["-created", "amount"]

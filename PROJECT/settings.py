@@ -130,8 +130,8 @@ UNFOLD = {
         "show_all_applications": False,
         "navigation": [
             {
-                "title": "Мониторинг",
-                "separator": False,
+                "title": "Офис",
+                "separator": True,
                 "collapsible": False,
                 "items": [
                     {
@@ -139,14 +139,38 @@ UNFOLD = {
                         "icon": "people",
                         "badge_style": "solid",
                         "link": reverse_lazy("admin:app_main_user_changelist"),
-                    },
+                    }
+                ],
+            },
+            {
+                "title": "Менеджмент",
+                "separator": True,
+                "collapsible": False,
+                "items": [
                     {
                         "title": "Этапы",
                         "icon": "timeline",
                         "link": reverse_lazy("admin:app_main_milestone_changelist"),
                     },
+                    {
+                        "title": "Мотивирующие фразы",
+                        "icon": "keyboard_double_arrow_up",
+                        "link": reverse_lazy("admin:app_main_motivationalphrase_changelist"),
+                    }
                 ],
             },
+            {
+                "title": "Вознаграждения и Наказания",
+                "separator": True,
+                "collapsible": False,
+                "items": [
+                    {
+                        "title": "Выдать/Отнять балл",
+                        "icon": "poker_chip",
+                        "link": reverse_lazy("admin:app_main_point_changelist"),
+                    }
+                ],
+            }
         ],
     },
 }

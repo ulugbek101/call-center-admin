@@ -3,7 +3,7 @@ from django.contrib.auth.models import Group
 
 from unfold.admin import ModelAdmin
 
-from app_main.models import User, Milestone
+from app_main.models import User, Milestone, MotivationalPhrase, Point
 
 
 admin.site.unregister(Group)
@@ -34,11 +34,11 @@ class UserAdmin(ModelAdmin):
     list_per_page = 20
 
     @admin.display(description='Телефон', ordering='phone_number')
-    def phone_number_display(self, obj):
+    def phone_number_display(self, obj: User):
         return str(obj.phone_number) if obj.phone_number else '-'
 
     @admin.display(description='Роль', ordering='role')
-    def role_display(self, obj):
+    def role_display(self, obj: User):
         return obj.get_role_display()
 
     fieldsets = (
@@ -47,16 +47,9 @@ class UserAdmin(ModelAdmin):
                 "first_name", "last_name", "middle_name", "phone_number"
             )
         }),
-        # Поле "password" - отключено
-        # ("Безопасность", {
-        #     "fields": (
-        #         "password",
-        #     ),
-        #     "description": "Пароль зашифрован в целях безопасности, что бы изменить пароль - просто удалите старое значение и наберите новое",
-        # }),
         ("Другое (Не обязательно)", {
             "fields": (
-                "telegram_id", "role", "current_score", "current_milestone", "activation_code", "is_activation_code_used", "is_on_vacation", "is_staff", "is_superuser", "is_active"
+                "telegram_id", "role", "activation_code", "is_activation_code_used", "is_on_vacation", "is_staff", "is_superuser", "is_active"
             )
         }),
     )
@@ -92,3 +85,31 @@ class MilestoneAdmin(ModelAdmin):
     search_fields = ('name',)
     list_editable = ('required_score',)
     list_per_page = 20
+
+
+@admin.register(MotivationalPhrase)
+class MotivationalPhrasesAdmin(ModelAdmin):
+    search_help_text = "Поиск по фрагменту фразы"
+    list_display = ["id", "phrase", "created"]
+    list_filter = ["created"]
+    search_fields = ["name"]
+    list_per_page = 20
+
+
+@admin.register(Point)
+class PointAdmin(ModelAdmin):
+    autocomplete_fields = ["user"]
+    search_help_text = "Поиск по фрагменту причины вознаграждения"
+    list_display = ["id", "first_name_display", "last_name_display", "amount", "created"]
+    list_filter = ["created"]
+    search_fields = ["user__first_name", "user__last_name", "description"]
+    list_per_page = 20
+
+    @admin.display(description="Имя", ordering="user__first_name")
+    def first_name_display(self, obj: Point):
+        return obj.user.first_name
+
+    @admin.display(description="Фамилия", ordering="user__last_name")
+    def last_name_display(self, obj: Point):
+        return obj.user.last_name
+
