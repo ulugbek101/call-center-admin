@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="refresh" content="30">
+		<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+		<title>Energy.uz | Liderlar Ro'yxati</title>
+	</head>
+	<body class="max-w-[1200px] mx-auto bg-gray-900">
+		<div class="background-container">
+			<img
+                class="moon"
+				src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/moon2.png"
+				alt=""
+			/>
+			<div class="stars"></div>
+			<div class="twinkling"></div>
+			<div class="clouds"></div>
+		</div>
+
+		<div class="absolute min-w-1/2 rounded-2xl p-10 top-20 left-1/2 -translate-x-1/2 flex flex-col gap-10" style="background: rgba(0, 0, 0, 30%);">
+            <h1 class="font-semibold text-white text-5xl text-center">
+                TOP 10 liderlar
+            </h1>
+            <ul role="list" class="divide-y divide-slate-700">
+                {% for staff in staffs %}
+                <li class="flex justify-between gap-x-6 py-5">
+                    <div class="flex items-center min-w-0 gap-x-4">
+                        <p class="font-semibold text-white text-4xl">
+                            {% if forloop.counter == 1 %}
+                                🥇
+                            {% elif forloop.counter == 2 %}
+                                🥈
+                            {% elif forloop.counter == 3 %}
+                                🥉
+                            {% else %}
+                                   {{ forloop.counter }}
+                            {% endif %}
+                        </p>
+                        <img
+                            src="https://res.cloudinary.com/dhtrn05k4/image/upload/v1/devsearch-media/profiles/user-default.png"
+                            alt=""
+                            class="size-16 flex-none rounded-full bg-gray-800 outline -outline-offset-1 outline-white/10"
+                        />
+                        <div class="min-w-0 flex-auto">
+                            <p class="text-xl font-semibold text-white">
+                                {{ staff.first_name|default_if_none:""|title }} {{ staff.last_name|default_if_none:""|title }}
+                            </p>
+                            <p class="mt-1 truncate text-base text-gray-400">
+                                {{ staff.telegram_id|default_if_none:"" }}
+                            </p>
+                        </div>
+                    </div>
+                    <div
+                        class="hidden shrink-0 sm:flex sm:flex-col sm:items-end sm:justify-center"
+                    >
+                        <p class="text-xl text-white">{{ staff.current_score }} ball</p>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+		<style>
+			@keyframes move-background {
+				from {
+					-webkit-transform: translate3d(0px, 0px, 0px);
+				}
+				to {
+					-webkit-transform: translate3d(1000px, 0px, 0px);
+				}
+			}
+			@-webkit-keyframes move-background {
+				from {
+					-webkit-transform: translate3d(0px, 0px, 0px);
+				}
+				to {
+					-webkit-transform: translate3d(1000px, 0px, 0px);
+				}
+			}
+
+			@-moz-keyframes move-background {
+				from {
+					-webkit-transform: translate3d(0px, 0px, 0px);
+				}
+				to {
+					-webkit-transform: translate3d(1000px, 0px, 0px);
+				}
+			}
+
+			@-webkit-keyframes move-background {
+				from {
+					-webkit-transform: translate3d(0px, 0px, 0px);
+				}
+				to {
+					-webkit-transform: translate3d(1000px, 0px, 0px);
+				}
+			}
+
+			.background-container {
+				position: fixed;
+				top: 0;
+				left: 0;
+				bottom: 0;
+				right: 0;
+			}
+
+			.stars {
+				background: black
+					url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/stars.png)
+					repeat;
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				display: block;
+				z-index: 0;
+			}
+
+			.twinkling {
+				width: 10000px;
+				height: 100%;
+				background: transparent
+					url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/twinkling.png")
+					repeat;
+				background-size: 1000px 1000px;
+				position: absolute;
+				right: 0;
+				top: 0;
+				bottom: 0;
+				z-index: 2;
+
+				-moz-animation: move-background 70s linear infinite;
+				-ms-animation: move-background 70s linear infinite;
+				-o-animation: move-background 70s linear infinite;
+				-webkit-animation: move-background 70s linear infinite;
+				animation: move-background 70s linear infinite;
+			}
+
+			.clouds {
+				width: 10000px;
+				height: 100%;
+				background: transparent
+					url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/clouds_repeat.png")
+					repeat;
+				background-size: 1000px 1000px;
+				position: absolute;
+				right: 0;
+				top: 0;
+				bottom: 0;
+				z-index: 3;
+
+				-moz-animation: move-background 150s linear infinite;
+				-ms-animation: move-background 150s linear infinite;
+				-o-animation: move-background 150s linear infinite;
+				-webkit-animation: move-background 150s linear infinite;
+				animation: move-background 150s linear infinite;
+			}
+			.moon {
+				height: 70vh;
+				width: 70vh;
+				position: absolute;
+				z-index: 3;
+				right: 20px;
+			}
+		</style>
+	</body>
+</html>

@@ -18,6 +18,7 @@ makedirs(BASE_DIR / 'templates', exist_ok=True)
 SECRET_KEY = env.str('SECRET_KEY')
 DEBUG = env.bool('DEBUG', default=False)
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
+TELEGRAM_BOT_TOKEN = env.str('TELEGRAM_BOT_TOKEN')
 
 INSTALLED_APPS = [
     'unfold',

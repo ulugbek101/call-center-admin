@@ -34,7 +34,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def current_score(self):
-        return sum(self.point_set.values_list('amount'))
+        points = self.point_set.values_list('amount')
+        sum = 0
+        for point in points:
+            sum += point[0]
+        return sum
 
     @property
     def current_milestone(self):
@@ -112,7 +116,6 @@ class FinishedMilestones(models.Model):
 
 class MotivationalPhrase(models.Model):
     phrase = models.TextField(verbose_name="мотивирующая фраза", help_text="Длина не ограничена")
-    send_time = models.TimeField(verbose_name="Время отправки", help_text="Если не ставить - то автоматически подставиться 12:00 дня", default="12:00:00")
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
