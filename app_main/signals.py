@@ -1,5 +1,6 @@
 import requests
 from datetime import datetime
+from random import randint
 
 from django.utils import timezone
 from django.conf import settings
@@ -35,3 +36,10 @@ def send_message_on_point_create(sender, instance, created, *args, **kwargs):
             response.raise_for_status()
         except requests.RequestException as e:
             print("Telegram error:", e)
+
+
+
+@receiver(signal=post_save, sender=User)
+def set_activation_code(sender, instance, created, *args, **kwargs):
+    if created:
+        instance.activation_code = f"{instance.id}{instance.last_name[0].capitalize()}{randint(10, 50)}{instance.first_name[0]}"

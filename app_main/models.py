@@ -69,16 +69,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = "Пользователи"
         unique_together = ("first_name", "last_name", "middle_name")
 
-    def save(self, *args, **kwargs):
-        if self.password and not self.password.startswith('pbkdf2_'):
-            self.password = make_password(self.password)
-
-        if not self.activation_code:
-            super().save(*args, **kwargs)
-            self.activation_code = f"{self.id}{self.last_name[0].capitalize()}{randint(10, 50)}{self.first_name[0]}"
-
-        super().save(*args, **kwargs)
-
 
 class Milestone(models.Model):
     name = models.CharField(verbose_name="Название", max_length=255, unique=True)
