@@ -11,8 +11,8 @@ from app_main.managers import UserManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    first_name = models.CharField(verbose_name="Имя", max_length=255, blank=True, null=True)
-    last_name = models.CharField(verbose_name="Фамилия", max_length=255, blank=True, null=True)
+    first_name = models.CharField(verbose_name="Имя", max_length=255, null=True)
+    last_name = models.CharField(verbose_name="Фамилия", max_length=255, null=True)
     middle_name = models.CharField(verbose_name="Отчество", max_length=255, blank=True, null=True)
     phone_number = PhoneNumberField(verbose_name="Номер телефона", unique=True)
     telegram_id = models.CharField(verbose_name="Телеграмм ID", max_length=200, null=True, blank=True)
@@ -30,6 +30,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
+    REQUIRED_FIELDS = ["first_name", "last_name"]
     USERNAME_FIELD = "phone_number"
 
     @property
