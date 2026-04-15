@@ -43,3 +43,4 @@ def send_message_on_point_create(sender, instance, created, *args, **kwargs):
 def set_activation_code(sender, instance, created, *args, **kwargs):
     if created:
         instance.activation_code = f"{instance.id}{instance.last_name[0].capitalize()}{randint(10, 50)}{instance.first_name[0]}"
+        instance.save(update_fields=['activation_code'])
